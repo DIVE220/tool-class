@@ -1,4 +1,4 @@
-package com.fang.generalTools.Utils;
+package com.fang.generalTools.utils;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;

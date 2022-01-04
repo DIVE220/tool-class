@@ -1,6 +1,6 @@
 package com.fang.demo;
 
-import com.fang.generalTools.Utils.QRCodeUtil;
+import com.fang.generalTools.utils.QRCodeUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

@@ -1,0 +1,7 @@
+#serverÅäÖÃ
+server:
+  #¶Ë¿ÚºÅ
+  port: 7060
+  tomcat:
+    accept-count: 1000
+    max-connections: 6000

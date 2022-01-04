@@ -1,4 +1,4 @@
-package com.fang.generalTools.Utils;
+package com.fang.generalTools.utils;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -12,6 +12,8 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 
 /**
@@ -27,7 +29,7 @@ public class QRCodeUtil {
     /**
      *二维码尺寸
      */
-    private static final int QRCODE_SIZE = 300;
+    private static final int QRCODE_SIZE = 150;
     /**
      *LOGO宽度
      */
@@ -54,7 +56,7 @@ public class QRCodeUtil {
         //二维码字符集
         hints.put(EncodeHintType.CHARACTER_SET, CHARSET);
         //二维码边距
-        hints.put(EncodeHintType.MARGIN, 1);
+        hints.put(EncodeHintType.MARGIN, 0);
         //生成二维码工具类
         BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, QRCODE_SIZE, QRCODE_SIZE, hints);
 
@@ -82,7 +84,6 @@ public class QRCodeUtil {
       * @param source //制作的二维码
      * @param logoPath //LOGO地址
      * @param needCompress //是否需要压缩
-     * @return void
      */
     private static void insertImage(BufferedImage source, String logoPath, boolean needCompress) throws Exception {
         File file = new File(logoPath);
@@ -119,11 +120,54 @@ public class QRCodeUtil {
     }
 
 
+
+
+    /**
+     *判断生成地址是否有文件
+     * @author 方磊
+     * @date 2022/1/4
+      * @param destPath //下载地址
+     */
+    public static void mkdirs(String destPath) {
+        File file = new File(destPath);
+        if (!file.exists() && !file.isDirectory()) {
+            file.mkdirs();
+        }
+    }
+
+
+    /**
+     *生成二维码
+     * @author 方磊
+     * @date 2022/1/4
+      * @param content //参数
+     * @param logoPath //LOGO地址
+     * @param output //输出流
+     * @param needCompress //是否压缩LOGO
+     */
+    public static void encode(String content, String logoPath, OutputStream output, boolean needCompress) throws Exception{
+        BufferedImage image = createImage(content ,logoPath , needCompress);
+        ImageIO.write(image , FORMAT , output);
+    }
+
+
+    /**
+     *生成二维码
+     * @author 方磊
+     * @date 2022/1/4
+      * @param content //参数
+     * @param output //输出流
+     */
+    public static void encode(String content , OutputStream output) throws Exception{
+        BufferedImage image = createImage(content ,null , false);
+        ImageIO.write(image , FORMAT , output);
+    }
+
     /**
      *生成二维码返回二维码文件名称
      * @author 方磊
      * @date 2021/12/29
-      * @param content //内容
+     * @param content //内容
      * @param logoPath //LOGO地址
      * @param destPath //保存地址
      * @param fileName //文件名称
@@ -138,16 +182,41 @@ public class QRCodeUtil {
         return fileName;
     }
 
-    public static void mkdirs(String destPath) {
-        File file = new File(destPath);
-        if (!file.exists() && !file.isDirectory()) {
-            file.mkdirs();
-        }
+
+    /**
+     *功能描述
+     * @author 方磊
+     * @date 2022/1/4
+      * @param content //参数
+     * @param destPath //保存地址
+     * @param fileName //文件名
+     * @return java.lang.String //文件名
+     */
+    public static String encode(String content , String destPath, String fileName) throws Exception {
+        BufferedImage image = createImage(content, null, false);
+        mkdirs(destPath);
+        fileName = fileName.substring(0, fileName.indexOf(".") > 0 ? fileName.indexOf(".") : fileName.length()) + "." + FORMAT.toLowerCase();
+        ImageIO.write(image , FORMAT , new File(destPath + "/" + fileName));
+        return fileName;
     }
 
-    public static void encode(String content, String logoPath, OutputStream output, boolean needCompress) throws Exception{
-        BufferedImage image = createImage(content ,logoPath , needCompress);
-        ImageIO.write(image , FORMAT , output);
+
+    /**
+     *功能描述
+     * @author 方磊
+     * @date 2022/1/4
+      * @param content //参数
+     * @param destPath //保存地址
+     * @return java.lang.String //文件名
+     */
+    public static String encode(String content , String destPath) throws Exception {
+        BufferedImage image = createImage(content, null, false);
+        mkdirs(destPath);
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        String fileName = format.format(new Date());
+        fileName = fileName + "." + FORMAT.toLowerCase();
+        ImageIO.write(image , FORMAT , new File(destPath + "/" + fileName));
+        return fileName;
     }
 
     ;
